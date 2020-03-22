@@ -15,11 +15,10 @@ class RecordInfo {
   final String filePath;
   final double time;
 
-  RecordInfo(this.filePath,this.time);
-
+  RecordInfo(this.filePath, this.time);
 }
 
-class _MyAppState extends State<MyApp> implements OpusRecorderInf{
+class _MyAppState extends State<MyApp> implements OpusRecorderInf {
   String _platformVersion = 'Unknown';
 
   List<RecordInfo> infos = List();
@@ -50,45 +49,41 @@ class _MyAppState extends State<MyApp> implements OpusRecorderInf{
       _platformVersion = platformVersion;
     });
   }
-  
-  void OnRecordFinished(String filePath, double time){
-    infos.add(RecordInfo(filePath,time));
-    setState((){});
-  }
 
+  void onRecordFinished(String filePath, double time) {
+    infos.add(RecordInfo(filePath, time));
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Center(
             child: ListView.builder(
                 itemCount: infos.length,
                 itemBuilder: (BuildContext context, int index) {
                   RecordInfo info = infos[index];
                   return GestureDetector(
-                      child:ListTile(title: Text(info.filePath)),
-                      onTap:(){
+                      child: ListTile(title: Text(info.filePath)),
+                      onTap: () {
                         OpusRecorder.playFile(info.filePath);
                       });
-                }
-            ),
-        ),
-        floatingActionButton:GestureDetector(
-          onLongPressStart:(LongPressStartDetails details){
-            print("onLongPressStart");
-            OpusRecorder.startRecord();
-          },
-          onLongPressEnd:(LongPressEndDetails details){
-            print("onLongPressEnd");
-            OpusRecorder.stopRecord();
-          },
-          child:FloatingActionButton(child:Icon(Icons.add))
-        )
-      ),
+                }),
+          ),
+          floatingActionButton: GestureDetector(
+              onLongPressStart: (LongPressStartDetails details) {
+                print("onLongPressStart");
+                OpusRecorder.startRecord();
+              },
+              onLongPressEnd: (LongPressEndDetails details) {
+                print("onLongPressEnd");
+                OpusRecorder.stopRecord();
+              },
+              child: FloatingActionButton(child: Icon(Icons.add)))),
     );
   }
 }

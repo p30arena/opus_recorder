@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 
 abstract class OpusRecorderInf {
-  void OnRecordFinished(String filePath, double time);
+  void onRecordFinished(String filePath, double time);
 }
 
 
@@ -42,7 +42,7 @@ class OpusRecorder {
     print(methodCall.toString());
     if(methodCall.method == "finishedRecord") {
       if(currentInf != null) {
-        currentInf.OnRecordFinished(methodCall.arguments[0],methodCall.arguments[1]);
+        currentInf.onRecordFinished(methodCall.arguments[0],methodCall.arguments[1]);
       }
     }
     return Future.value(methodCall.method);
