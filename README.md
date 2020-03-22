@@ -1,6 +1,6 @@
 # opus_recorder
 
-移植过来用于录制播放opus格式音频的flutter插件
+Flutter Android and iOS OPUS Recorder and Player
 
 
 ## run
@@ -12,10 +12,9 @@ flutter run
 
 ```
 
-## 引用
 
 
-### 必要权限android
+### Android
 ```
  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
@@ -23,14 +22,9 @@ flutter run
 
 ```
 
-### 必要权限ios
+### iOS
 
 ```
 <key>NSMicrophoneUsageDescription</key>
-	<string>请求使用麦克风</string>
+	<string>User Recrods Their Audio</string>
 ```
-
-
-### ps
-
-android上引用时会报个资源引用的冲突跟着报错改过来就行具体可以对比看example的改动
