@@ -16,9 +16,9 @@ flutter run
 
 ### Android
 ```
- <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
 
 ```
 
@@ -26,5 +26,5 @@ flutter run
 
 ```
 <key>NSMicrophoneUsageDescription</key>
-	<string>User Recrods Their Audio</string>
+<string>User Recrods Their Audio</string>
 ```
