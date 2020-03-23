@@ -21,6 +21,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import android.os.Handler;
 import android.os.Looper;
 import java.lang.Runnable;
+import java.lang.InterruptedException;
 
 /**
  * OpusRecorderPlugin
@@ -104,7 +105,11 @@ public class OpusRecorderPlugin implements MethodCallHandler {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        recThread.join();
+                        try {
+                            recThread.join();
+                        } catch (InterruptedException e) {
+                        }
+
                         channel.invokeMethod("finishedRecord", arguments);
                     }
                 });
