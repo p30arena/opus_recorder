@@ -18,6 +18,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+import android.os.Handler;
+import android.os.Looper;
+import java.lang.Runnable;
+
 /**
  * OpusRecorderPlugin
  */
@@ -26,12 +30,9 @@ public class OpusRecorderPlugin implements MethodCallHandler {
      * Plugin registration.
      */
 
-
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
+    private static String[] PERMISSIONS_STORAGE = { Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
     private static final int MODE_NORMAL = 1;
     private static final int MODE_IN_CALL = 2;
@@ -50,7 +51,7 @@ public class OpusRecorderPlugin implements MethodCallHandler {
     public static void verifyStorageAndMicPermissions(Activity activity) {
 
         try {
-            //检测是否有写的权限
+            // 检测是否有写的权限
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 int permission = ContextCompat.checkSelfPermission(activity, PERMISSIONS_STORAGE[1]);
@@ -62,7 +63,7 @@ public class OpusRecorderPlugin implements MethodCallHandler {
                 permission = ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO);
                 if (permission != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+                    ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.RECORD_AUDIO }, 1);
                 }
             }
 
@@ -71,7 +72,6 @@ public class OpusRecorderPlugin implements MethodCallHandler {
         }
     }
 
-
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "opus_recorder");
         channel.setMethodCallHandler(new OpusRecorderPlugin(channel, registrar));
@@ -79,7 +79,7 @@ public class OpusRecorderPlugin implements MethodCallHandler {
 
     private String currentRecordPath = null;
     private AudioRecordHandler currentAudioRecordHandler = null;
-
+    private Thread recThread = null;
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
@@ -93,14 +93,20 @@ public class OpusRecorderPlugin implements MethodCallHandler {
             currentRecordPath = CommonUtil.getAudioSavePath(0);
             currentAudioRecordHandler = new AudioRecordHandler(currentRecordPath);
             currentAudioRecordHandler.setRecording(true);
-            new Thread(currentAudioRecordHandler).start();
+            recThread = new Thread(currentAudioRecordHandler).start();
         } else if ("stopRecord".equals(call.method)) {
             if (currentAudioRecordHandler != null) {
                 currentAudioRecordHandler.setRecording(false);
-                List<Object> arguments = new ArrayList<>();
+                final List<Object> arguments = new ArrayList<>();
                 arguments.add(currentRecordPath);
                 arguments.add(Double.valueOf(currentAudioRecordHandler.getRecordTime()));
-                this.channel.invokeMethod("finishedRecord", arguments);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recThread.join();
+                        channel.invokeMethod("finishedRecord", arguments);
+                    }
+                });
             }
         } else if ("playFile".equals(call.method)) {
             if (audioPlayerHandler != null) {
@@ -111,7 +117,7 @@ public class OpusRecorderPlugin implements MethodCallHandler {
         } else if ("playFileWithMode".equals(call.method)) {
             List<Object> arguments = (List<Object>) call.arguments;
             if (audioPlayerHandler != null && arguments.size() == 2) {
-                //List<Object> arguments = (List<Object>) call.arguments;
+                // List<Object> arguments = (List<Object>) call.arguments;
                 String path = arguments.get(0).toString();
                 Log.i("xiaominfc", "play:" + arguments.get(0).toString());
                 int mode = (int) arguments.get(1);
@@ -122,7 +128,7 @@ public class OpusRecorderPlugin implements MethodCallHandler {
                 }
                 audioPlayerHandler.setAudioMode(mode, this.registrar.activeContext());
                 audioPlayerHandler.startPlay(path);
-            }else {
+            } else {
                 Log.i("xiaominfc", "play fail for:" + call.toString());
                 result.notImplemented();
             }
