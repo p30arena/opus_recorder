@@ -93,7 +93,8 @@ public class OpusRecorderPlugin implements MethodCallHandler {
             currentRecordPath = CommonUtil.getAudioSavePath(0);
             currentAudioRecordHandler = new AudioRecordHandler(currentRecordPath);
             currentAudioRecordHandler.setRecording(true);
-            recThread = new Thread(currentAudioRecordHandler).start();
+            recThread = new Thread(currentAudioRecordHandler);
+            recThread.start();
         } else if ("stopRecord".equals(call.method)) {
             if (currentAudioRecordHandler != null) {
                 currentAudioRecordHandler.setRecording(false);
