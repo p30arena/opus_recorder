@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.os.Looper;
 import java.lang.Runnable;
 import java.lang.InterruptedException;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 /**
  * OpusRecorderPlugin
@@ -102,9 +104,14 @@ public class OpusRecorderPlugin implements MethodCallHandler {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            error.printStackTrace(pw);
+                            String sStackTrace = sw.toString();
+
                             final List<Object> arguments = new ArrayList<>();
                             arguments.add(error.getMessage());
-                            arguments.add(error.getStackTrace());
+                            arguments.add(sStackTrace);
                             channel.invokeMethod("onRecordError", arguments);
                         }
                     });
