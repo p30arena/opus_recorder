@@ -45,12 +45,15 @@ public class AudioRecordHandler implements Runnable {
 				}
 			}
 			try {
+				android.util.Log.i("run", "5");
 				OpusRecorder.getInstance().startRecording(this.fileName);
+				android.util.Log.i("run", "6");
 				recordTime = 0;
 				startTime = System.currentTimeMillis();
 				maxVolumeStart = System.currentTimeMillis();
+				android.util.Log.i("run", String.valueOf(this.isRecording));
 				while (this.isRecording) {
-					android.util.Log.i("run", "5");
+					android.util.Log.i("run", "7");
 					endTime = System.currentTimeMillis();
 					recordTime = (float) ((endTime - startTime) / 1000.0f);
 					if (recordTime >= MAX_SOUND_RECORD_TIME) {
@@ -62,15 +65,15 @@ public class AudioRecordHandler implements Runnable {
 			} catch (Exception e) {
 				throw e;
 			} finally {
-				android.util.Log.i("run", "6");
+				android.util.Log.i("run", "8");
 				OpusRecorder.getInstance().stopRecording();
-				android.util.Log.i("run", "7");
+				android.util.Log.i("run", "9");
 				if (recordInstance != null) {
-					android.util.Log.i("run", "8");
-					recordInstance.stop();
-					android.util.Log.i("run", "9");
-					recordInstance.release();
 					android.util.Log.i("run", "10");
+					recordInstance.stop();
+					android.util.Log.i("run", "11");
+					recordInstance.release();
+					android.util.Log.i("run", "12");
 					recordInstance = null;
 				}
 			}
