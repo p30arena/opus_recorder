@@ -48,13 +48,13 @@ public class AudioRecordHandler implements Runnable {
 					endTime = System.currentTimeMillis();
 					recordTime = (float) ((endTime - startTime) / 1000.0f);
 					if (recordTime >= MAX_SOUND_RECORD_TIME) {
-						//timeover
+						// timeover
 						break;
 					}
 					maxVolumeEnd = System.currentTimeMillis();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw e;
 			} finally {
 				OpusRecorder.getInstance().stopRecording();
 				if (recordInstance != null) {
@@ -63,8 +63,9 @@ public class AudioRecordHandler implements Runnable {
 					recordInstance = null;
 				}
 			}
-		}catch (Exception e){
-
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 
 	}
