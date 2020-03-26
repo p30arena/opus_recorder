@@ -98,11 +98,13 @@ public class OpusRecorderPlugin implements MethodCallHandler {
             recThread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
                 @Override
                 public void uncaughtException(Thread t, Throwable e) {
+                    final Throwable error = e;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             final List<Object> arguments = new ArrayList<>();
-                            arguments.add(e.getMessage());
+                            arguments.add(error.getMessage());
+                            arguments.add(error.getStackTrace());
                             channel.invokeMethod("onRecordError", arguments);
                         }
                     });
