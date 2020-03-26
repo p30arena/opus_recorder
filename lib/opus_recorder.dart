@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 abstract class OpusRecorderInf {
   void onRecordFinished(String filePath, double time);
-  void onRecordError(String message);
+  void onRecordError(String message, String stackTrace);
 }
 
 class OpusRecorder {
@@ -44,7 +44,8 @@ class OpusRecorder {
       }
     } else if (methodCall.method == "onRecordError") {
       if (currentInf != null) {
-        currentInf.onRecordError(methodCall.arguments[0]);
+        currentInf.onRecordError(
+            methodCall.arguments[0], methodCall.arguments[1]);
       }
     }
     return Future.value(methodCall.method);
