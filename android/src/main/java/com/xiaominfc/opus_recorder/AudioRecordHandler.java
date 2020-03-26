@@ -30,10 +30,15 @@ public class AudioRecordHandler implements Runnable {
 
 	public void run() {
 		try {
+			android.util.Log.i("run", "0");
 			synchronized (mutex) {
+				android.util.Log.i("run", "1");
 				while (!this.isRecording) {
+					android.util.Log.i("run", "2");
 					try {
+						android.util.Log.i("run", "3");
 						mutex.wait();
+						android.util.Log.i("run", "4");
 					} catch (InterruptedException e) {
 						throw new IllegalStateException("Wait() interrupted!", e);
 					}
@@ -45,6 +50,7 @@ public class AudioRecordHandler implements Runnable {
 				startTime = System.currentTimeMillis();
 				maxVolumeStart = System.currentTimeMillis();
 				while (this.isRecording) {
+					android.util.Log.i("run", "5");
 					endTime = System.currentTimeMillis();
 					recordTime = (float) ((endTime - startTime) / 1000.0f);
 					if (recordTime >= MAX_SOUND_RECORD_TIME) {
@@ -56,10 +62,15 @@ public class AudioRecordHandler implements Runnable {
 			} catch (Exception e) {
 				throw e;
 			} finally {
+				android.util.Log.i("run", "6");
 				OpusRecorder.getInstance().stopRecording();
+				android.util.Log.i("run", "7");
 				if (recordInstance != null) {
+					android.util.Log.i("run", "8");
 					recordInstance.stop();
+					android.util.Log.i("run", "9");
 					recordInstance.release();
+					android.util.Log.i("run", "10");
 					recordInstance = null;
 				}
 			}
@@ -96,16 +107,23 @@ public class AudioRecordHandler implements Runnable {
 	}
 
 	public void setRecording(boolean isRec) {
+		android.util.Log.i("setRecording", "0");
 		synchronized (mutex) {
+			android.util.Log.i("setRecording", "1");
 			this.isRecording = isRec;
+			android.util.Log.i("setRecording", "2");
 			if (this.isRecording) {
+				android.util.Log.i("setRecording", "3");
 				mutex.notify();
+				android.util.Log.i("setRecording", "4");
 			}
 		}
 	}
 
 	public boolean isRecording() {
+		android.util.Log.i("isRecording", "0");
 		synchronized (mutex) {
+			android.util.Log.i("isRecording", "1");
 			return isRecording;
 		}
 	}

@@ -101,12 +101,15 @@ public class OpusRecorderPlugin implements MethodCallHandler {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            result.error("error", "error", null);
+                            final List<Object> arguments = new ArrayList<>();
+                            arguments.add(e.getMessage());
+                            channel.invokeMethod("onRecordError", arguments);
                         }
                     });
                 }
             });
             recThread.start();
+            result.success(null);
         } else if ("stopRecord".equals(call.method)) {
             if (currentAudioRecordHandler != null) {
                 currentAudioRecordHandler.setRecording(false);
