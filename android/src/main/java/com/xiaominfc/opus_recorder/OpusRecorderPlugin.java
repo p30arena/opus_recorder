@@ -83,7 +83,7 @@ public class OpusRecorderPlugin implements MethodCallHandler {
     private Thread recThread = null;
 
     @Override
-    public void onMethodCall(MethodCall call, Result result) {
+    public void onMethodCall(final MethodCall call, final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if ("startRecord".equals(call.method)) {
