@@ -20,7 +20,6 @@ public class AudioRecordHandler implements Runnable {
 	private long endTime = 0;
 	private long maxVolumeStart = 0;
 	private long maxVolumeEnd = 0;
-	private static AudioRecord recordInstance = null;
 	private OpusRecorder opusRecorder;
 
 	public AudioRecordHandler(String fileName) {
@@ -57,11 +56,6 @@ public class AudioRecordHandler implements Runnable {
 				throw e;
 			} finally {
 				OpusRecorder.getInstance().stopRecording();
-				if (recordInstance != null) {
-					recordInstance.stop();
-					recordInstance.release();
-					recordInstance = null;
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
